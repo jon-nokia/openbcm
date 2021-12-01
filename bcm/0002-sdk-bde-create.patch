@@ -1,0 +1,57 @@
+diff --git a/src/appl/diag/sysconf.c b/src/appl/diag/sysconf.c
+index 2db8d3a1f..a1c1bf3ef 100644
+--- a/src/appl/diag/sysconf.c
++++ b/src/appl/diag/sysconf.c
+@@ -35,8 +35,10 @@
+ #endif
+ #include <ibde.h>
+ #include <soc/util.h>
++#include <systems/bde/linux/include/linux-bde.h>
+ 
+-extern int bde_create(void); /* provide by configuration/socdiag */
++ibde_t *bde;
++//extern int bde_create(void); /* provide by configuration/socdiag */
+ extern int soc_phy_fw_acquire_default(const char *file_name, uint8 **fw, int *fw_len);
+ extern int soc_phy_fw_release_default(const char *dev_name, uint8 *fw, int fw_len);
+ 
+@@ -425,7 +427,20 @@ _rcpu_config_get(int unit, soc_rcpu_cfg_t *cfg)
+ #define UNIT_IN_COMPOSITE 3
+ int sysconf_probe_done;
+ 
++int
++bde_create(void)
++{
++    linux_bde_bus_t bus;
++    bus.be_pio = SYS_BE_PIO;
++    bus.be_packet = SYS_BE_PACKET;
++    bus.be_other = SYS_BE_OTHER;
++    return linux_bde_create(&bus, &bde);
++}
++
++
+ #define MAX_NOF_COMPOSITE_DEVICE_ARGS (2 * SOC_MAX_NUM_DEVICES)
++
++
+ int
+ sysconf_probe(void)
+ {
+
+diff --git a/systems/linux/user/common/socdiag.c b/systems/linux/user/common/socdiag.c
+index 68146af44..56e00db90 100755
+--- a/systems/linux/user/common/socdiag.c
++++ b/systems/linux/user/common/socdiag.c
+@@ -172,6 +172,7 @@ int intr_int_context(void)
+ }
+ #endif
+ 
++#if 0
+ int
+ bde_create(void)
+ {
+@@ -188,6 +189,7 @@ bde_create(void)
+ 
+     return linux_bde_create(&bus, &bde);
+ }
++#endif
+
+

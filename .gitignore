@@ -1,0 +1,9 @@
+*.rpm
+.built*
+.Dockerfile*
+*.deb
+.bcmsdk*
+bcm/sdk*
+sdk
+libbcmsdk*
+openbcm/

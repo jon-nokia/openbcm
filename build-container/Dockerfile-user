@@ -1,0 +1,21 @@
+FROM bcm-%BLDENV%:%DOCKER_BASE_TAG%
+ARG UID=1000
+ARG GID=1000
+
+# add this user to the base docker
+RUN getent group $GID || groupadd -g $GID user
+RUN useradd -u $UID -g $GID user | chpasswd && adduser user sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+RUN if [ -n "${http_proxy}" ] ; then \
+ echo http_proxy=${http_proxy} > /etc/environment && \
+ echo https_proxy=${https_proxy} >> /etc/environment && \
+ echo ftp_proxy=${ftp_proxy} >> /etc/environment ; \
+ fi
+
+RUN sudo mkdir -p /home/user && sudo chown -R user:user /home/user
+RUN sudo mkdir -p /usr/include/bcm/sdk/systems/bde/linux && sudo chown -R user:user /usr/include/bcm
+
+USER user
+
+RUN if [ -n "${http_proxy}" ] ; then git config --global http.proxy ${http_proxy} ; fi

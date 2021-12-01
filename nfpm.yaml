@@ -1,0 +1,29 @@
+#############################################################################
+#  Description:
+#
+#  Copyright (c) 2021 Nokia
+#############################################################################
+
+# Package for library binary distribution
+
+name: "libbcmsdk"
+arch: "amd64"
+platform: "linux"
+version: "v1.0.0"
+section: "default"
+priority: "extra"
+replaces:
+- libbcmsdk
+provides:
+- libbcmsdk
+maintainer: "Jon Goldberg <jon.goldberg@nokia.com>"
+description: |
+  Broadcom XGS Library
+vendor: "Broadcom"
+license: "Broadcom"
+contents:
+   - src: ./libbcmsdk.so.1
+     dst: /usr/lib/libbcmsdk.so
+   - src: ./openbcm/Legal/
+     dst: /usr/share/bcmsdk/
+

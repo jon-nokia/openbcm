@@ -1,0 +1,21 @@
+--- sdk/src/Makefile.orig	2021-02-17 18:04:02.812357343 -0500
++++ sdk/src/Makefile	2021-02-17 18:04:14.684218850 -0500
+@@ -34,6 +34,6 @@
+ subdirs += flat
+ endif
+ 
+-override MAKEFLAGS += TARGET=$(TARGET)
++override MAKEFLAGS += TARGET=$(TARGET) -j8
+ 
+ include ${SDK}/make/Make.subdirs
+--- sdk/systems/linux/user/common/Makefile	2021-02-17 18:16:28.187513048 -0500
++++ sdk/systems/linux/user/common/Makefile.orig	2021-02-17 18:16:47.691278801 -0500
+@@ -129,7 +129,7 @@
+ endif
+ 
+ # Kernel modules
+-KERNEL_TARGETS := $(KERNEL_BDE) $(USER_BDE)
++KERNEL_TARGETS ?= $(KERNEL_BDE) $(USER_BDE)
+ LOCAL_KERNEL_TARGETS := $(patsubst %,$(realpath ..)/$(platform)/%,$(KERNEL_BDE_LOCAL) $(USER_BDE_LOCAL))
+ 
+ # Main BCM application

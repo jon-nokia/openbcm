@@ -1,0 +1,53 @@
+diff --git a/src/soc/esw/greyhound.c b/src/soc/esw/greyhound.c
+index af4eaea15..87726934a 100644
+--- a/src/soc/esw/greyhound.c
++++ b/src/soc/esw/greyhound.c
+@@ -200,6 +200,18 @@ static const int port_speed_max_53454[] = {
+       25,  25, 110, 110, 110, 110,  25,  25,  
+       25,  25,  25,  25,  25,  25
+ };
++
++#if 1
++/* 16x1G + 3x10G - indexed by physical port # */
++static const int port_speed_max_53454_16x1G_3x10G[] = {
++      -1,  -1,  25,  25,  25,  25,  -1,  -1,
++      -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
++      -1,  -1,  25,  25,  25,  25,  25,  25,
++      25,  25, 100,  -1, 100, 100,  25,  25,
++      25,  25,  -1,  -1,  -1,  -1
++};
++#endif
++
+ /* 8x1GE + 16x2.5G + 4x10G */
+ static const int port_speed_max_53456[] = {
+       -1,  -1,  10,  10,  10,  10,  10,  10,  
+@@ -986,6 +998,17 @@ STATIC _gh_sku_info_t _gh_sku_port_config[] = {
+      _GH_TSC_LANE_MODE_SINGLE, _GH_TSC_LANE_MODE_SINGLE,
+      _GH_TSC_LANE_MODE_SINGLE, _GH_TSC_LANE_MODE_SINGLE},
+     {0, 0, _GH_FLEX_LANE_MODE_ALL, 0, 0, 0}},
++#if 1
++// Option 4 is our very own special option
++{BCM53454_DEVICE_ID, 4, 1, port_blk_xlport,
++    p2l_mapping_cascade_1, port_speed_max_53454_16x1G_3x10G,
++    gh_tdm_elkhound_53455, _GH_ARRAY_SIZE(gh_tdm_elkhound_53455),
++    0x4, 0,
++    {_GH_TSC_LANE_MODE_SINGLE, _GH_TSC_LANE_MODE_SINGLE,
++     _GH_TSC_LANE_MODE_SINGLE, _GH_TSC_LANE_MODE_SINGLE,
++     _GH_TSC_LANE_MODE_SINGLE, _GH_TSC_LANE_MODE_SINGLE},
++    {0, 0, _GH_FLEX_LANE_MODE_ALL, 0, 0, 0}},
++#endif
+ {BCM53456_DEVICE_ID,  1, 1, port_blk_gport, 
+     p2l_mapping_cascade, port_speed_max_non_cascade_2p5, 
+     gh_tdm_cascade_2p5, _GH_ARRAY_SIZE(gh_tdm_cascade_2p5),
+@@ -4461,7 +4484,11 @@ soc_greyhound_port_config_init(int unit, uint16 dev_id)
+ 
+     option = soc_property_get_str(unit, spn_BCM53400_INIT_PORT_CONFIG);
+     if(option == NULL) {
++#if 1
++        _gh_port_config_id = 4;
++#else
+         _gh_port_config_id = 1;
++#endif
+     } else {
+         _gh_port_config_id = sal_ctoi(option, NULL);
+     }
