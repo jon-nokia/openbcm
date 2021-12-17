@@ -40,11 +40,14 @@ bcmsdk_%: .bcmsdk-patch
           $(MAKE) -C sdk/systems/linux/user/x86-smp_generic_64-2_6 $(word2)
 	echo "****** Complete $@ ******"
 
-libbcmsdk.so.1: bcmsdk_build
-	$(CC) -fPIC -shared -Wl,-soname,libbcmsdk.so -o libbcmsdk.so.1 \
+libbcmsdk.so.1.debug: bcmsdk_build
+	$(CC) -fPIC -shared -Wl,-soname,libbcmsdk.so -o $@ \
 	-L$(bcm_objpath) \
 	-Wl,--whole-archive $(bcm_libraries) -Wl,--no-whole-archive \
 	$(bcm_extra_objs)
+
+libbcmsdk.so.1: libbcmsdk.so.1.debug
+	strip --strip-unneeded -o $@ $<
 
 print:
 	echo $(bcm_libraries)

@@ -20,6 +20,7 @@ include bcmsdk.mk
 pkg_%: bcmsdk_all
 	nfpm pkg --packager $(word2) --config ./nfpm-dev.yaml --target ./
 	nfpm pkg --packager $(word2) --config ./nfpm.yaml --target ./
+	nfpm pkg --packager $(word2) --config ./nfpm-dbg.yaml --target ./
 
 all: pkg_deb
 clean: bcmsdk_clean
