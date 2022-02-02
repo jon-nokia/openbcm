@@ -1,0 +1,28 @@
+name: Makefile CI
+
+on:
+  push:
+    branches:
+      - jon-dev
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Compile
+      run: |
+        make all
+        md5sum *.deb > md5sum.txt
+    - name: Upload artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: Latest Image
+        path: libbcmsdk*.deb md5sum.txt
+
+
