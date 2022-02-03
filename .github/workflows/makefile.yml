@@ -3,7 +3,7 @@ name: Makefile CI
 on:
   push:
     branches:
-      - jon-dev
+      - main
   pull_request:
     branches:
       - main
